@@ -51,7 +51,7 @@ public class ServerGroupDefaultPropertiesProviderImplementation implements Serve
 
     @Override
     public List<String> getJavaParameters() {
-        if (System.getProperty("os.arch").contains("arm") || System.getProperty("os.arch").contains("aarch64")) return Arrays.asList(
+        return Arrays.asList(
                 "-Dfile.encoding=UTF8",
                 "-XX:+UseG1GC",
                 "-XX:+UnlockExperimentalVMOptions",
@@ -61,17 +61,6 @@ public class ServerGroupDefaultPropertiesProviderImplementation implements Serve
                 "-XX:GCPauseIntervalMillis=100",
                 "-XX:+UseAdaptiveSizePolicy",
                 "-XX:ParallelGCThreads=2");
-        else return Arrays.asList(
-                "-Dfile.encoding=UTF8",
-                "-XX:+UseG1GC",
-                "-XX:+UnlockExperimentalVMOptions",
-                "-XX:+DoEscapeAnalysis",
-                "-XX:+UseCompressedOops",
-                "-XX:MaxGCPauseMillis=10",
-                "-XX:GCPauseIntervalMillis=100",
-                "-XX:+UseAdaptiveSizePolicy",
-                "-XX:ParallelGCThreads=2",
-                "-XX:UseSSE=3");
     }
 
     @Override
