@@ -9,7 +9,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class ProxyGroupDefaultPropertiesProviderImplementation implements ProxyGroupProperties.ProxyGroupDefaultPropertiesProvider {
+public class ProxyGroupDefaultPropertiesProviderImplementation
+        implements ProxyGroupProperties.ProxyGroupDefaultPropertiesProvider {
 
     @Override
     public Integer getMaxPlayerCountPerProxy() {
@@ -78,7 +79,9 @@ public class ProxyGroupDefaultPropertiesProviderImplementation implements ProxyG
 
     @Override
     public List<String> getJavaParameters() {
-        else return Arrays.asList("-Dfile.encoding=UTF8", "-XX:+UnlockExperimentalVMOptions", "-XX:+DoEscapeAnalysis", "-XX:+UseCompressedOops", "-XX:MaxGCPauseMillis=10", "-XX:GCPauseIntervalMillis=100", "-XX:+UseAdaptiveSizePolicy", "-XX:ParallelGCThreads=2");
+        return Arrays.asList("-Dfile.encoding=UTF8", "-XX:+UnlockExperimentalVMOptions", "-XX:+DoEscapeAnalysis",
+                "-XX:+UseCompressedOops", "-XX:MaxGCPauseMillis=10", "-XX:GCPauseIntervalMillis=100",
+                "-XX:+UseAdaptiveSizePolicy", "-XX:ParallelGCThreads=2");
     }
 
     @Override
@@ -93,7 +96,7 @@ public class ProxyGroupDefaultPropertiesProviderImplementation implements ProxyG
 
     @Override
     public int getTimeout() {
-        return 1000*60*3;
+        return 1000 * 60 * 3;
     }
 
 }
