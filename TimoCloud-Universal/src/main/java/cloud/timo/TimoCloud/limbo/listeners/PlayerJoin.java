@@ -12,6 +12,7 @@ public class PlayerJoin implements Listener {
     @EventHandler (priority = EventPriority.LOWEST)
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
         TimoCloudLimbo.getInstance().getServer().getScheduler().runTaskAsync(TimoCloudLimbo.getInstance(), () -> TimoCloudLimbo.getInstance().sendPlayers());
+        TimoCloudLimbo.getInstance().getStateByEventManager().onPlayerJoin();
     }
 
 }

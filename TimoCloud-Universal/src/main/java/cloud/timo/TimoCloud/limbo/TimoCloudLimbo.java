@@ -6,8 +6,8 @@ import cloud.timo.TimoCloud.api.implementations.internal.TimoCloudInternalImplem
 import cloud.timo.TimoCloud.api.implementations.managers.APIResponseManager;
 import cloud.timo.TimoCloud.api.implementations.managers.EventManager;
 import cloud.timo.TimoCloud.api.utils.APIInstanceUtil;
-import cloud.timo.TimoCloud.bukkit.managers.BukkitFileManager;
-import cloud.timo.TimoCloud.bukkit.sockets.BukkitStringHandler;
+import cloud.timo.TimoCloud.bukkit.TimoCloudBukkit;
+import cloud.timo.TimoCloud.limbo.managers.StateByEventManager;
 import cloud.timo.TimoCloud.common.encryption.RSAKeyPairRetriever;
 import cloud.timo.TimoCloud.common.global.logging.TimoCloudLogger;
 import cloud.timo.TimoCloud.common.log.utils.LogInjectionUtil;
@@ -28,6 +28,8 @@ import cloud.timo.TimoCloud.limbo.sockets.LimboSocketClient;
 import cloud.timo.TimoCloud.limbo.sockets.LimboSocketClientHandler;
 import cloud.timo.TimoCloud.limbo.sockets.LimboSocketMessageManager;
 import cloud.timo.TimoCloud.limbo.sockets.LimboStringHandler;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import com.loohp.limbo.Limbo;
 import com.loohp.limbo.events.status.StatusPingEvent;
 import com.loohp.limbo.plugins.LimboPlugin;
@@ -35,7 +37,7 @@ import io.netty.channel.Channel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.CharsetUtil;
-import org.bukkit.Bukkit;
+import com.loohp.limbo.player.Player;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -50,6 +52,7 @@ public class TimoCloudLimbo extends LimboPlugin implements TimoCloudLogger {
     private LimboFileManager fileManager;
     private LimboSocketClientHandler socketClientHandler;
     private LimboSocketMessageManager socketMessageManager;
+    private StateByEventManager stateByEventManager;
     private LimboStringHandler stringHandler;
     private String prefix = "[TimoCloud] ";
     private boolean enabled = false;
@@ -154,6 +157,7 @@ public class TimoCloudLimbo extends LimboPlugin implements TimoCloudLogger {
         socketClientHandler = new LimboSocketClientHandler();
         socketMessageManager = new LimboSocketMessageManager();
         stringHandler = new LimboStringHandler();
+        stateByEventManager = new StateByEventManager();
 
         APIInstanceUtil.setInternalMessageInstance(new TimoCloudInternalMessageAPILimboImplementation());
         APIInstanceUtil.setEventInstance(new EventManager());
@@ -196,18 +200,24 @@ public class TimoCloudLimbo extends LimboPlugin implements TimoCloudLogger {
                 StatusPingEvent event = eventConstructor.newInstance(InetAddressUtil.getLocalHost(), Limbo.getInstance().getServerProperties().getMotd(), Limbo.getInstance().getPlayers().size(), Limbo.getInstance().getServerProperties().getMaxPlayers());
                 Limbo.getInstance().getEventsManager().callEvent(event);
                 getSocketMessageManager().sendMessage(Message.create().setType(MessageType.SERVER_SET_MOTD).setData(event.getMotd()));
+                getStateByEventManager().setStateByMotd(event.getMotd().toString().trim());
             } catch (NoSuchMethodException e) {
                 eventConstructor = StatusPingEvent.class.getConstructor(InetAddress.class, String.class, boolean.class, int.class, int.class);
                 StatusPingEvent event = eventConstructor.newInstance(InetAddressUtil.getLocalHost(), Limbo.getInstance().getServerProperties().getMotd(), false, Limbo.getInstance().getPlayers().size(), Limbo.getInstance().getServerProperties().getMaxPlayers());
                 Limbo.getInstance().getEventsManager().callEvent(event);
                 Limbo.getInstance().getEventsManager().callEvent(event);
                 getSocketMessageManager().sendMessage(Message.create().setType(MessageType.SERVER_SET_MOTD).setData(event.getMotd()));
+                getStateByEventManager().setStateByMotd(event.getMotd().toString().trim());
             }
         } catch (Exception e) {
             severe("Error while sending MOTD: ");
             TimoCloudLimbo.getInstance().severe(e);
             getSocketMessageManager().sendMessage(Message.create().setType(MessageType.SERVER_SET_MOTD).setData(Limbo.getInstance().getServerProperties().getMotd()));
         }
+    }
+
+    public StateByEventManager getStateByEventManager() {
+        return stateByEventManager;
     }
 
 
@@ -280,10 +290,11 @@ public class TimoCloudLimbo extends LimboPlugin implements TimoCloudLogger {
     }
 
     private void registerTasks() {
-        getServer().getScheduler().runTask(this, () -> registerAtCore());
+        getServer().getScheduler().runTaskLater(this, this::registerAtCore, 100L);
     }
 
     private void registerAtCore() {
+        info("Registering at core...");
         getSocketMessageManager().sendMessage(Message.create().setType(MessageType.SERVER_REGISTER).setTarget(getServerId()));
         getSocketMessageManager().sendMessage(Message.create().setType(MessageType.SERVER_SET_MAP).setData(getMapName()));
     }

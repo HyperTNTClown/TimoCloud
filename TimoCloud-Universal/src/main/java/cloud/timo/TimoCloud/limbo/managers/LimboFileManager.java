@@ -10,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.nio.charset.StandardCharsets;
+import java.sql.Time;
 import java.util.Arrays;
 
 public class LimboFileManager {
@@ -32,6 +33,7 @@ public class LimboFileManager {
         try {
             baseDirectory = new File(TimoCloudLimbo.getInstance().getServer().getPluginFolder(), "/TimoCloud/");
             baseDirectory.mkdirs();
+            TimoCloudLimbo.getInstance().info("Created directory: " + baseDirectory.getAbsolutePath());
 
             loadConfig();
 
@@ -43,8 +45,9 @@ public class LimboFileManager {
     private void loadConfig() {
         try {
             configFile = new File(baseDirectory, "config.yml");
-            configFile.createNewFile();
             config = new FileConfiguration(configFile);
+
+            TimoCloudLimbo.getInstance().info("Initialized config.yml at: " + configFile.getAbsolutePath());
 
             addConfigDefaults();
         } catch (Exception e) {
