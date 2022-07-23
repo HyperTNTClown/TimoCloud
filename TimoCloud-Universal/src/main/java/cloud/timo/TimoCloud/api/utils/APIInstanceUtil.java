@@ -56,4 +56,10 @@ public class APIInstanceUtil {
         field.setAccessible(true);
         field.set(null, instance);
     }
+
+    public static void setLimboInstance(TimoCloudLimboAPI instance) throws NoSuchFieldException, IllegalAccessException{
+        Field field = TimoCloudAPI.class.getDeclaredField("limboAPI");
+        field.setAccessible(true);
+        field.set(null, instance);
+    }
 }

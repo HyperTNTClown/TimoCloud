@@ -1,0 +1,5 @@
+name: TimoCloud
+main: cloud.timo.TimoCloud.limbo.TimoCloudLimbo
+description: "TimoCloud is a cloud-based server manager for Minecraft."
+version: ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}
+author: HyperTNTClown

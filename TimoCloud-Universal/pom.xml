@@ -41,6 +41,10 @@
             <id>velocity</id>
             <url>https://nexus.velocitypowered.com/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>loohp-repo</id>
+            <url>https://repo.loohpjames.com/repository</url>
+        </repository>
     </repositories>
 
     <build>
@@ -251,6 +255,12 @@
             <artifactId>powermock-module-junit4</artifactId>
             <version>1.7.3</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.loohp</groupId>
+            <artifactId>Limbo</artifactId>
+            <version>0.6.16-ALPHA</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

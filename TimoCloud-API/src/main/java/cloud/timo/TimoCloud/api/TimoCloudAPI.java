@@ -9,6 +9,8 @@ public class TimoCloudAPI {
     private static TimoCloudEventAPI eventAPI;
     private static TimoCloudMessageAPI messageAPI;
 
+    private static TimoCloudLimboAPI limboAPI;
+
     private TimoCloudAPI() {};
 
     /**
@@ -125,5 +127,15 @@ public class TimoCloudAPI {
      */
     public static TimoCloudMessageAPI getMessageAPI() {
         return messageAPI;
+    }
+
+    /**
+     * The limbo API provides methods to communicate within the TimoCloud network
+     * You can use this API everywhere (Bukkit, Bungee, Core, ...)
+     *
+     * @return Limbo API instance
+     */
+    public static TimoCloudLimboAPI getLimboAPI() {
+        return limboAPI;
     }
 }
