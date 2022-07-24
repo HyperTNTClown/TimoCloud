@@ -11,9 +11,8 @@ steps:
   image: maven:3.8.6-jdk-8
   commands:
   - mvn clean package
-  - wget https://raw.githubusercontent.com/HyperTNTClown/drone-webdav/master/push.sh
-  - chmod +x push.sh
-  - ./push.sh
+- name: webdav-upload
+  image: s2.apflkchn.tk/drone-webdav
   environment:
     PLUGIN_FILE: TimoCloud-Universal/target/TimoCloud.jar
     PLUGIN_BASE_URL:
@@ -22,5 +21,4 @@ steps:
       from_secret: webdav_username 
     PLUGIN_PASSWORD:
       from_secret: webdav_password
-    PLUGIN_DESTINATION: $DRONE_REPO/$DRONE_BUILD_NUMBER/
-    
+    PLUGIN_DESTINATION: $$DRONE_REPO/$$DRONE_BUILD_NUMBER/
