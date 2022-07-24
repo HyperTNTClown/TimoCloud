@@ -11,7 +11,7 @@ steps:
   image: maven:3.8.6-jdk-8
   commands:
   - mvn clean package
-  - export PLUGIN_DESTINATION=$DRONE_REPO/$DRONE_BUILD_NUMBER/
+  #- export PLUGIN_DESTINATION=$DRONE_REPO/$DRONE_BUILD_NUMBER/
 - name: webdav-upload
   image: s2.apflkchn.tk/drone-webdav
   environment:
