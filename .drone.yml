@@ -11,3 +11,15 @@ steps:
   image: maven:3.8.6-jdk-8
   commands:
   - mvn clean package
+- name: webdav-upload
+  image: s2.apflkchn.tk/drone-webdav
+  environment:
+    PLUGIN_FILE: TimoCloud-Universal/target/TimoCloud.jar
+    PLUGIN_BASE_URL:
+      from_secret: webdav_baseurl
+    PLUGIN_USERNAME:
+      from_secret: webdav_username 
+    PLUGIN_PASSWORD:
+      from_secret: webdav_password
+    PLUGIN_DESTINATION: $DRONE_REPO/$DRONE_BUILD_NUMBER/
+    
